@@ -1,10 +1,12 @@
 package com.orderApp.controller;
 
 import com.orderApp.model.Order;
+import com.orderApp.model.OrderEvent;
 import com.orderApp.repository.OrderRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.kafka.core.KafkaTemplate;
 
 import java.util.List;
 
@@ -16,25 +18,23 @@ public class OrderController {
     @Autowired
     OrderRepository orderRepo;
 
-   /* @Autowired
-    private KafkaTemplate<String, Order> kafkaTemplate;*/
+    @Autowired
+    private KafkaTemplate<String, OrderEvent> kafkaTemplate;
 
     @PostMapping("/orders")
-    public Order createOrder(@RequestBody Order order) {
+    public void createOrder(@RequestBody Order order) {
         try {
             order.setStatus("CREATED");
-            return orderRepo.save(order);
-/*            customerOrder.setOrderId(order.getId());
-            Order event = new Order();
-            event.setOrder(customerOrder);
-            event.setType("ORDER_CREATED");*/
-
-            //  this.kafkaTemplate.send("new-orders", event);
+            Order savedOrder = orderRepo.save(order);
+            OrderEvent event = new OrderEvent();
+            event.setOrder(savedOrder);
+            event.setType("ORDER_CREATED");
+            this.kafkaTemplate.send("new-orders", event);
+            //   return savedOrder;
         } catch (Exception e) {
-            log.info("ErrorSS {}", e.getMessage());
-            e.printStackTrace();
-            order.setStatus("FAILEDSS");
-            return orderRepo.save(order);
+            log.info("Error {}", e.getMessage());
+            order.setStatus("FAILED");
+            orderRepo.save(order);
         }
     }
 
