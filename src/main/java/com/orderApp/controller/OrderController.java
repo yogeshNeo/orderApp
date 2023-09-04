@@ -1,5 +1,6 @@
 package com.orderApp.controller;
 
+import com.orderApp.model.CustomerOrder;
 import com.orderApp.model.Order;
 import com.orderApp.model.OrderEvent;
 import com.orderApp.repository.OrderRepository;
@@ -22,17 +23,25 @@ public class OrderController {
     private KafkaTemplate<String, OrderEvent> kafkaTemplate;
 
     @PostMapping("/orders")
-    public void createOrder(@RequestBody Order order) {
+    public void createOrder(@RequestBody CustomerOrder customerOrder) {
+
+        Order order = new Order();
         try {
+            // save order in database
+            order.setAmount(customerOrder.getAmount());
+            order.setItem(customerOrder.getItem());
+            order.setQuantity(customerOrder.getQuantity());
             order.setStatus("CREATED");
-            Order savedOrder = orderRepo.save(order);
+            order = orderRepo.save(order);
+
+            customerOrder.setOrderId(order.getId());
             OrderEvent event = new OrderEvent();
-            event.setOrder(savedOrder);
+            event.setOrder(customerOrder);
             event.setType("ORDER_CREATED");
+            log.info("order saved {} and kafka new-orders topic publish :::::", order.getId());
             this.kafkaTemplate.send("new-orders", event);
-            //   return savedOrder;
         } catch (Exception e) {
-            log.info("Error {}", e.getMessage());
+            log.info("order saved failed :: ");
             order.setStatus("FAILED");
             orderRepo.save(order);
         }
@@ -42,6 +51,5 @@ public class OrderController {
     public List<Order> getOrder() {
         return orderRepo.findAll();
     }
-
 
 }

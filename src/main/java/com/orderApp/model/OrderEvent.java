@@ -13,5 +13,5 @@ public class OrderEvent {
 
     private String type;
 
-    private Order order;
+    private CustomerOrder order;
 }

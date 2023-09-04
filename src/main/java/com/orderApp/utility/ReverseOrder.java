@@ -20,7 +20,7 @@ public class ReverseOrder {
     public void reverseOrder(String event) {
         try {
             OrderEvent orderEvent = new ObjectMapper().readValue(event, OrderEvent.class);
-            Optional<Order> order = this.repository.findById(orderEvent.getOrder().getId());
+            Optional<Order> order = this.repository.findById(orderEvent.getOrder().getOrderId());
 
             order.ifPresent(o -> {
                 o.setStatus("FAILED");
@@ -29,6 +29,5 @@ public class ReverseOrder {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 }
