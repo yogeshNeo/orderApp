@@ -1,0 +1,14 @@
+spring:
+  profiles:
+    active: dev
+  config:
+    import: configserver:http://localhost:8085
+  cloud:
+    config:
+      refreshInterval: 10s
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"

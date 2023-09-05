@@ -6,12 +6,14 @@ import com.orderApp.model.OrderEvent;
 import com.orderApp.repository.OrderRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.kafka.core.KafkaTemplate;
 
 import java.util.List;
 
 @Slf4j
+@RefreshScope
 @RestController
 @RequestMapping("/api")
 public class OrderController {
