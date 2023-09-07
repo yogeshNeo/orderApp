@@ -48,5 +48,5 @@ redis-cli -p 7000 --cluster add-node 127.0.0.1:7007 127.0.0.1:7000 --cluster-sla
 https://developer.redis.com/operate/redis-at-scale/scalability/exercise-1/
 
 In Kafka directory
-sudo bin/zookeeper-server-start.sh config/zookeeper.properties
+sudo bin/zookeeper-server-start.sh config/zookeeper.properties        
 sudo bin/kafka-server-start.sh config/server.properties
