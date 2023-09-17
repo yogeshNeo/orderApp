@@ -1,17 +1,9 @@
 package com.orderApp.config;
 
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import redis.clients.jedis.HostAndPort;
-import redis.clients.jedis.JedisCluster;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 @Configuration
 @RequiredArgsConstructor
@@ -20,7 +12,7 @@ public class RedisConfig {
     @Value("${redis.ip}")
     private String redisIp;
 
-    @Bean(name = "redisClient")
+   /* @Bean(name = "redisClient")
     public JedisCluster getConnection() {
         String[] split = redisIp.split(",");
         Set<HostAndPort> hostAndPortSet = new HashSet<>();
@@ -32,5 +24,5 @@ public class RedisConfig {
         });
 
         return new JedisCluster(hostAndPortSet, new GenericObjectPoolConfig<>());
-    }
+    }*/
 }
