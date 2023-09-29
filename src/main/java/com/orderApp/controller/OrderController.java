@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.web.bind.annotation.*;
 import redis.clients.jedis.JedisCluster;
 
@@ -30,7 +31,7 @@ public class OrderController {
     private final JedisCluster redisClient;
     String ORDER_CACHE_KEY = "orderCacheKey";
 
-    //  private final KafkaTemplate<String, OrderEvent> kafkaTemplate;
+    private final KafkaTemplate<String, OrderEvent> kafkaTemplate;
     @Value("${redis.orderCacheExpireIn}")
     private int orderCacheExpireIn;
 
@@ -51,7 +52,7 @@ public class OrderController {
             event.setOrder(customerOrder);
             event.setType("ORDER_CREATED");
             log.info("order saved {} and kafka new-orders topic publish :::::", order.getId());
-            //  this.kafkaTemplate.send("new-orders", event);
+            this.kafkaTemplate.send("new-orders", event);
         } catch (Exception e) {
             log.info("order saved failed :: ");
             order.setStatus("FAILED");

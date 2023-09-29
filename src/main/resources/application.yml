@@ -7,8 +7,8 @@ spring:
     config:
       refreshInterval: 10s
       retry:
-        initialInterval: 7000
-        maxInterval: 5000
+        initialInterval: 5000
+        maxInterval: 7000
         maxAttempts: 20
 management:
   health:
@@ -42,15 +42,6 @@ resilience4j:
         permittedNumberOfCallsInHalfOpenState: 3
         slidingWindowSize: 10
         slidingWindowType: COUNT_BASED
-#  retry:
-#    instances:
-#      userService:
-#        maxRetryAttempts: 5
-#        waitDuration: 10s
-
-#redis:
-#  ip: 127.0.0.1:7000, 127.0.0.1:7001, 127.0.0.1:7002, 127.0.0.1:7003, 127.0.0.1:7004
-#  orderCacheExpireIn: 3600
 
 health:
   config:
